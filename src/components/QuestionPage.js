@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { handleAnswerQuestion } from "../actions/questions";
+import { handleAnswerQuestion } from "../actions/shared";
 
 const withRouter = (Component) => {
   const ComponentWithRouterProp = (props) => {
@@ -14,40 +14,40 @@ const withRouter = (Component) => {
   return ComponentWithRouterProp;
 };
 
-const QuestionPage = ({ id, author, avatarUrl, option_1, option_2, voted_option_1, voted_option_2, questionAnswered, dispatch, authedUser }) => {
+const QuestionPage = ({ id, author, avatarUrl, optionOne, optionTwo, dispatch, answeredQuestion, authedUser }) => {
     return (
         <div className="pagecontainer">
             <h3>{`Poll by ${author}`}</h3>
             <img src={avatarUrl} alt="Avatar Img" className="questionImg" />
             <h3>Would you rather</h3>
             {
-                questionAnswered ? <p className="info">You already voted on this poll</p> : null
+                answeredQuestion ? <p className="info">You already voted on this poll</p> : null
             }
-            <div className="answerContainer" style={{"marginTop": questionAnswered ? "30px" : "75px" }}>
+            <div className="answerContainer" style={{"marginTop":  answeredQuestion ? "30px" : "75px" }}>
                 <QuestionAnswerOption 
                     id={id}
                     oid={1}
-                    answered={questionAnswered} 
-                    option={option_1} 
-                    voters={voted_option_1.length} 
-                    percVoters={voted_option_1.length / (voted_option_1.length + voted_option_2.length)*100}
+                    option={optionOne}
+                    voters={optionOne.votes.length} 
+                    percVoters={optionOne.votes.length / (optionOne.votes.length + optionTwo.votes.length)*100}
                     authedUser={authedUser}
-                    dispatch={dispatch}  />
+                    dispatch={dispatch}
+                    answeredQuestion={answeredQuestion}  />
                 <QuestionAnswerOption 
                     id={id}
                     oid={2}
-                    answered={questionAnswered} 
-                    option={option_2} 
-                    voters={voted_option_2.length} 
-                    percVoters={voted_option_2.length / (voted_option_1.length + voted_option_2.length)*100}
+                    option={optionTwo} 
+                    voters={optionTwo.votes.length} 
+                    percVoters={optionTwo.votes.length / (optionOne.votes.length + optionTwo.votes.length)*100}
                     authedUser={authedUser}
-                    dispatch={dispatch}  />
+                    dispatch={dispatch} 
+                    answeredQuestion={answeredQuestion} />
             </div>
         </div>
     )
 }
 
-const QuestionAnswerOption = ({ id, oid, option, answered, voters, percVoters, authedUser, dispatch }) => {
+const QuestionAnswerOption = ({ id, oid, option, voters, percVoters, authedUser, dispatch, answeredQuestion }) => {
     
     const question_id = id;
 
@@ -56,26 +56,24 @@ const QuestionAnswerOption = ({ id, oid, option, answered, voters, percVoters, a
 
         dispatch(
             handleAnswerQuestion({
-                id: question_id,
+                qid: question_id,
                 authedUser: authedUser,
-                "optionChosen": option
+                "answer": oid === 1 ? "optionOne" : "optionTwo"
             })
         );
     };
 
-    React.useEffect(() => console.log(answered, oid),[answered, oid])
-
     return(
         <div className="answerBlock">
             {
-                answered && answered === oid ? <p className="info">You have chosen this option:</p> : null
+                option.votes.includes(authedUser) ? <p className="info">You have chosen this option:</p> : null
             }
-            <div className="answerWrapper" style={{"border": answered && answered === oid ? "3px solid green" : null}}>
-                <div className="answerText">{option}</div>
-                <button disabled={answered ? true : false} onClick={handleClick} className="answerButton">Click</button>
+            <div className="answerWrapper" style={{"border": option.votes.includes(authedUser) ? "3px solid green" : null}}>
+                <div className="answerText">{option.text}</div>
+                <button disabled={answeredQuestion} onClick={handleClick} className="answerButton">Click</button>
             </div>
             {
-                answered ? <p className="info">{`${voters} Voted for this option. This is ${percVoters}%`}</p> : null
+                answeredQuestion ? <p className="info">{`${voters} Voted for this option. This is ${percVoters}%`}</p> : null
             }
         </div>
     )
@@ -84,20 +82,18 @@ const QuestionAnswerOption = ({ id, oid, option, answered, voters, percVoters, a
 const mapStateToProps = ({ questions, users, authedUser, dispatch }, props) => {
     const { id } = props.router.params;
 
-    const { author, option_1, option_2, voted_option_1, voted_option_2 } = questions[id];
+    const { author, optionOne, optionTwo } = questions[id];
 
-    const questionAnswered = voted_option_1.includes(authedUser) ? 1 : voted_option_2.includes(authedUser) ? 2 : null;
+    const answeredQuestion = optionOne.votes.includes(authedUser) || optionTwo.votes.includes(authedUser);
 
     return {
         id,
         author,
         avatarUrl: users[author].avatarURL,
-        option_1,
-        option_2,
-        voted_option_1,
-        voted_option_2,
-        questionAnswered,
+        optionOne,
+        optionTwo,
         dispatch,
+        answeredQuestion,
         authedUser
     };
   };

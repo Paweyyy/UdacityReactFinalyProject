@@ -18,10 +18,10 @@ const LoginPage = ({ users, dispatch }) => {
       <h1 className=''>Employee Polls</h1>
       <img alt="Login Img" className='loginImg' src='employee.jpeg'/>
       <p>Please select your username:</p>
-      <select onChange={handleSelect} name="pets" id="pet-select">
+      <select data-testid={"username-selection"} onChange={handleSelect} name="pets" id="pet-select">
           <option value="">--Please choose your username--</option>
           {users.map(user => {
-            return <option value={user}>{user}</option>
+            return <option key={user} value={user}>{user}</option>
           })
           }
       </select>

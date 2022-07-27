@@ -1,20 +1,13 @@
-# Chirper Project
+# Employee Polls React Application
 
-This repo is a code-along with the first project in the React Nanodegree program.
-
-Most of the commits in this repository correspond to videos in the program.
+This React-Redux based Web-Application is an Application for a company that wants it users to allow the voting and creating of polls on any kind of topic.
 
 ## Project Setup
 
 - Clone the Project.
 - Install the dependencies: `npm install`
+- Start the project: `npm start`
 
-## Contributing
+## Run the Tests
 
-Because this is a code-along project and the commits correspond to specific videos in the program, we will not be accepting pull requests.
-
-If you feel like there's a major problem, please open an issue to discuss the problem and potential resolution.
-
-## License
-
-MIT
+- Start the test: `npm test`

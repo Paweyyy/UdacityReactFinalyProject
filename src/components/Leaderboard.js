@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 import { formatLeaderboardData } from "../utils/helpers";
 
 const Leaderboard = ({ data }) => {
-    console.log(data)
     return (
         <div>
             <table>

@@ -4,7 +4,7 @@ import QuestionContainer from "./QuestionContainer"
 
 const Dashboard = ({ openQuestionsId, doneQuestionsId }) => {
     return(
-       <div className="pagecontainer">
+       <div className="pagecontainer" data-testid="success-screen">
             <QuestionsContainer questions={openQuestionsId} containerType={"New Questions"} />
             <QuestionsContainer questions={doneQuestionsId} containerType={"Done"} />
        </div>
@@ -19,7 +19,7 @@ const QuestionsContainer = ({ containerType, questions }) => {
             </div>
             <div className="questionsWrapper">
                 {questions.map(question => {
-                    return <QuestionContainer id={question}/>
+                    return <QuestionContainer key={question} id={question}/>
                 })}
             </div>
         </div>
@@ -29,8 +29,8 @@ const QuestionsContainer = ({ containerType, questions }) => {
 
 const mapStateToProps = ({ authedUser, questions }) => (
     {
-        openQuestionsId: Object.keys(questions).filter(id => !questions[id].voted_option_1.includes(authedUser) && !questions[id].voted_option_2.includes(authedUser)),
-        doneQuestionsId: Object.keys(questions).filter(id => questions[id].voted_option_1.includes(authedUser) || questions[id].voted_option_2.includes(authedUser)),
+        openQuestionsId: Object.keys(questions).filter(id => !questions[id].optionOne.votes.includes(authedUser) && !questions[id].optionTwo.votes.includes(authedUser)),
+        doneQuestionsId: Object.keys(questions).filter(id => questions[id].optionOne.votes.includes(authedUser) || questions[id].optionTwo.votes.includes(authedUser)),
     }
 );
 

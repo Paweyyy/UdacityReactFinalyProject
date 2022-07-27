@@ -2,25 +2,25 @@ import * as React from "react";
 import { useState } from "react";
 import { connect } from "react-redux"
 import { useNavigate } from "react-router-dom";
-import { handleAddQuestion } from "../actions/questions";
+import { handleAddQuestion } from "../actions/shared";
 
-const NewQuestionPage = ({ dispatch }) => {
+const NewQuestionPage = ({ authedUser, dispatch }) => {
     const navigate = useNavigate();
-    const[option1, setOption1] = useState("")
-    const[option2, setOption2] = useState("")
+    const[optionOne, setoptionOne] = useState("")
+    const[optionTwo, setoptionTwo] = useState("")
 
     const handleChange = e => {
         e.preventDefault();
-        e.target.id === "option1" ? setOption1(e.target.value) : setOption2(e.target.value)
+        e.target.id === "optionOne" ? setoptionOne(e.target.value) : setoptionTwo(e.target.value)
     }
 
     const handleSubmit = e =>{
         e.preventDefault()
 
-        dispatch(handleAddQuestion(option1, option2))
+        dispatch(handleAddQuestion({optionOne, optionTwo, authedUser}))
 
-        setOption1("");
-        setOption2("")
+        setoptionOne("");
+        setoptionTwo("")
 
         navigate("/")
     } 
@@ -31,24 +31,31 @@ const NewQuestionPage = ({ dispatch }) => {
             <h3 className="newHeadline">Would you rather</h3>
             <p className="newSubline">Create your own poll</p>
             <form onSubmit={handleSubmit} className="newQuestionForm">
-                <label htmlFor="option1">First Option</label>
+                <label htmlFor="optionOne">First Option</label>
                 <input 
-                    id="option1"
+                    id="optionOne"
                     className="newInput"
                     type="text"
                     onChange={handleChange}
                     />
-                <label htmlFor="option2">Second Option</label>
+                <label htmlFor="optionTwo">Second Option</label>
                 <input 
-                    id="option2"
+                    id="optionTwo"
                     className="newInput"
                     type="text"
                     onChange={handleChange}
                 />
-                <button className="newQuestionButton" type="submit" disabled={option1 === "" || option2 === ""}>Submit</button>
+                <button className="newQuestionButton" type="submit" disabled={optionOne === "" || optionTwo === ""}>Submit</button>
             </form>
         </div>
     )
 }
 
-export default connect()(NewQuestionPage);
+const mapStateToProps = ( { authedUser, dispatch }) => {
+    return {
+        authedUser,
+        dispatch
+    }
+}
+
+export default connect(mapStateToProps)(NewQuestionPage);

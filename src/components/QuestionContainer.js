@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const QuestionContainer = ({ author, timestamp, id }) => {
     return(
-        <div className="question">
+        <div className="question" data-testid="question">
             <div className="questionWrapper">
                 <h5>{author}</h5>
                 <p className="datetime">{timestamp}</p>

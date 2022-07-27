@@ -1,7 +1,6 @@
 import { RECEIVE_QUESTIONS, ADD_QUESTION, ANSWER_QUESTION } from "../actions/questions";
 
 export default function questions(state = {}, action) {
-  console.log(action)
   switch (action.type) {
     case RECEIVE_QUESTIONS:
       return {
@@ -9,20 +8,13 @@ export default function questions(state = {}, action) {
         ...action.questions,
       };
     case ANSWER_QUESTION:
-      if(action.optionChosen === state[action.id].option_1){
-        return {
-          ...state,
-          [action.id]: {
-            ...state[action.id],
-            voted_option_1: [...state[action.id].voted_option_1, action.authedUser]
-          }
-        }
-      }else{
-        return {
-          ...state,
-          [action.id]: {
-            ...state[action.id],
-            voted_option_2: [...state[action.id].voted_option_2, action.authedUser]
+      return {
+        ...state,
+        [action.qid]: {
+          ...state[action.qid],
+          [action.answer]: {
+            ...state[action.qid][action.answer],
+            votes: [...state[action.qid][action.answer].votes, action.authedUser]
           }
         }
       };
