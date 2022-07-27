@@ -1,4 +1,5 @@
 import { _saveQuestion, _saveQuestionAnswer } from "./_DATA";
+import * as React from 'react';
 
 describe('_saveQuestion', () => {
     it("will return a formatted question with correct fields", async() => {

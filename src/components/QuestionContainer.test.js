@@ -8,6 +8,7 @@ import '@testing-library/jest-dom/extend-expect';
 import thunk from "redux-thunk";
 import { applyMiddleware } from "redux";
 import { getInitialData } from "../utils/api" 
+import * as React from 'react';
 
 describe("QuestionPage", () => {
     it("will match QuestionContainer", async () => {

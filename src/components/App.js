@@ -9,6 +9,7 @@ import Nav from "./Nav";
 import LoginPage from "./LoginPage"
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
+import FourOFour from "./404"
 
 const App = (props) => {
   useEffect(() => {
@@ -27,6 +28,7 @@ const App = (props) => {
               <Route path="/leaderboard" element={<Leaderboard />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/404" element={<FourOFour />} />
           </Routes>
         </div>
     </Fragment>

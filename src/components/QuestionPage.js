@@ -15,6 +15,12 @@ const withRouter = (Component) => {
 };
 
 const QuestionPage = ({ id, author, avatarUrl, optionOne, optionTwo, dispatch, answeredQuestion, authedUser }) => {
+    const navigate = useNavigate();
+    
+    if(!id){
+        navigate("/404")
+    }
+
     return (
         <div className="pagecontainer">
             <h3>{`Poll by ${author}`}</h3>
@@ -82,20 +88,33 @@ const QuestionAnswerOption = ({ id, oid, option, voters, percVoters, authedUser,
 const mapStateToProps = ({ questions, users, authedUser, dispatch }, props) => {
     const { id } = props.router.params;
 
-    const { author, optionOne, optionTwo } = questions[id];
+    if(!Object.keys(questions).includes(id)){
+        return{
+            id: null,
+            author: null,
+            avatarURL: null,
+            optionOne: null,
+            optionTwo: null,
+            dispatch: null,
+            answeredQuestion: null,
+            authedUser: null
+        }
+    }else{
+        const { author, optionOne, optionTwo } = questions[id];
 
-    const answeredQuestion = optionOne.votes.includes(authedUser) || optionTwo.votes.includes(authedUser);
-
-    return {
-        id,
-        author,
-        avatarUrl: users[author].avatarURL,
-        optionOne,
-        optionTwo,
-        dispatch,
-        answeredQuestion,
-        authedUser
-    };
+        const answeredQuestion = optionOne.votes.includes(authedUser) || optionTwo.votes.includes(authedUser);
+    
+        return {
+            id,
+            author,
+            avatarUrl: users[author].avatarURL,
+            optionOne,
+            optionTwo,
+            dispatch,
+            answeredQuestion,
+            authedUser
+        };
+    }
   };
   
 export default withRouter(connect(mapStateToProps)(QuestionPage));
